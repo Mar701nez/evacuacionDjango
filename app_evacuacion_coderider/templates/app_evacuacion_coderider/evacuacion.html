@@ -4,86 +4,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SENA - Ruta de Evacuación</title>
-    <link rel="stylesheet" href="{% static 'recursos/estilos/estilo.css' %}">
+    <title>SENA - Protocolo de Evacuación</title>
+    
+    <!-- CSS Leaflet & Routing Machine -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'recursos/estilos/estilo.css' %}">
 </head>
 <body>
 
-    <div class="background-overlay"></div>
+    <div class="bg-orb orb-one"></div>
+    <div class="bg-orb orb-two"></div>
+
+    <!-- 🧭 Menú Nav Estilo Glassmorphism -->
+    <nav class="navbar">
+        <div class="nav-contenedor">
+            <a href="#" class="nav-logo"><i class="fa-solid fa-shield-halved"></i> CodeRider</a>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-enlace activo">📍 Evacuación</a></li>
+                <li><a href="#" class="nav-enlace">📊 Panel</a></li>
+            </ul>
+        </div>
+    </nav>
 
     <main class="dashboard-container">
         
         <header class="header-main">
-            <div class="logo-area">
-                <i class="fa-solid fa-shield-halved"></i>
-                <div>
-                    <h1>Protocolo de <span>Evacuación</span></h1>
-                    <p>Centro de Comercio y Servicios • Piso 1</p>
-                </div>
+            <div>
+                <h1>Protocolo de <span>Evacuación</span></h1>
+                <p>Centro de Comercio y Servicios • Piso 1</p>
             </div>
             <div class="status-indicator">
-                <span class="pulse"></span> Sistema Activo
+                <i class="fa-solid fa-circle-dot"></i> Sistema Activo
             </div>
         </header>
 
-        <section class="grid-dashboard">
+        <!-- Cuadrícula 2 Columnas Estructurada -->
+        <div class="grid-dashboard">
             
-            <!-- Tarjeta del Mapa -->
-            <article class="card panel-mapa">
-                <div class="card-title">
-                    <i class="fa-solid fa-map-location-dot"></i> Ruta de Evacuación Principal
-                </div>
-                <div class="content-frame map-frame">
-                    <img src="{% static 'recursos/imagenes/fotos/evacuacion.jpg' %}" alt="Mapa de Evacuación SENA" class="map-image">
-                </div>
-                <p class="instruction-text"><i class="fa-solid fa-circle-info"></i> Sigue las flechas verdes hacia el punto de encuentro exterior.</p>
-            </article>
-
-            <!-- Tarjeta del Video Local Corregida -->
-            <article class="card panel-video">
-                <div class="card-title">
-                    <i class="fa-solid fa-video"></i> Procedimiento Oficial
-                </div>
-                <div class="content-frame video-frame">
-                    <video controls width="100%" height="100%" style="object-fit: cover;">
-                        <source src="{% static 'recursos/videos/clips/Evacuacion.mp4' %}" type="video/mp4">
-                        Tu navegador no soporta el video.
-                    </video>
-                </div>
-                <p class="instruction-text"><i class="fa-solid fa-exclamation-triangle"></i> Revisa las indicaciones para conservar la calma y ubicar las salidas.</p>
-            </article>
-
-            <!-- Tarjeta de Audio y Descargas -->
-            <div class="sidebar-cards">
+            <!-- Columna Izquierda: Mapa Interactivo + Sismos -->
+            <div class="col-main">
                 
-                <article class="card panel-audio">
+                <!-- 🗺️ NAVEGACIÓN Y RUTAS MÚLTIPLES ESTILO GOOGLE MAPS -->
+                <article class="card">
                     <div class="card-title">
-                        <i class="fa-solid fa-bell"></i> Alarma Sonora
+                        <i class="fa-solid fa-route"></i> NAVEGACIÓN Y RUTAS EN TIEMPO REAL
                     </div>
-                    <div class="audio-player-container">
-                        <div class="audio-icon"><i class="fa-solid fa-volume-high"></i></div>
-                        <audio controls class="custom-audio">
-                            <source src="{% static 'recursos/audios/alertas/Alarma de Emergencia.mp3' %}" type="audio/mpeg">
-                        </audio>
+
+                    <!-- Buscador de origen y destino -->
+                    <div class="map-search-bar" style="display: flex; gap: 0.5rem; margin-bottom: 0.8rem;">
+                        <input type="text" id="origen-input" placeholder="Escribe origen o haz clic en el mapa..." style="flex: 1; padding: 0.6rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff;">
+                        <input type="text" id="destino-input" value="SENA Comercio y Servicios" readonly style="width: 180px; padding: 0.6rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.5); color: var(--muted); text-overflow: ellipsis;">
+                        <button class="btn-action" onclick="trazarRutaManual()" style="padding: 0.6rem 1rem; border-radius: 8px; border: 0; background: var(--primary); color: #000; font-weight: bold; cursor: pointer;"><i class="fa-solid fa-directions"></i> Calcular</button>
+                    </div>
+
+                    <div class="mapa-wrapper" style="display: grid; grid-template-columns: 240px 1fr; gap: 10px;">
+                        <!-- Panel de Opciones de Ruta (Estilo Google Maps) -->
+                        <div id="panel-rutas" style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; font-size: 0.85rem;">
+                            <p style="color: var(--primary); font-weight: 800; margin-bottom: 8px;">🛣️ Opciones de Ruta</p>
+                            
+                            <div class="ruta-option activa" onclick="seleccionarRuta(0)" style="background: rgba(110, 231, 255, 0.15); border: 1px solid var(--primary); padding: 8px; border-radius: 8px; margin-bottom: 6px; cursor: pointer;">
+                                <strong>🔵 Ruta Principal</strong>
+                                <div style="color: var(--success); font-weight: bold; font-size: 0.95rem; margin-top: 2px;">28 min <span style="font-size: 0.8rem; color: var(--muted);">(11.8 km)</span></div>
+                                <small style="color: var(--muted);">Por Cra. 9 / Popayán</small>
+                            </div>
+
+                            <div class="ruta-option" onclick="seleccionarRuta(1)" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px; border-radius: 8px; margin-bottom: 6px; cursor: pointer;">
+                                <strong>⚪ Ruta Alternativa 1</strong>
+                                <div style="color: var(--muted); font-weight: bold; font-size: 0.85rem; margin-top: 2px;">29 min <span>(14.1 km)</span></div>
+                                <small style="color: var(--muted);">Por Cra. 6</small>
+                            </div>
+
+                            <div class="ruta-option" onclick="seleccionarRuta(2)" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px; border-radius: 8px; cursor: pointer;">
+                                <strong>⚪ Ruta Alternativa 2</strong>
+                                <div style="color: var(--muted); font-weight: bold; font-size: 0.85rem; margin-top: 2px;">31 min <span>(10.9 km)</span></div>
+                                <small style="color: var(--muted);">Por Variante Norte</small>
+                            </div>
+                        </div>
+
+                        <!-- Contenedor Único del Mapa -->
+                        <div id="mapa-interactivo" style="width: 100%; height: 380px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15);"></div>
+                    </div>
+                    <p style="color: var(--muted); font-size: 0.8rem; margin-top: 8px;"><i class="fa-solid fa-hand-pointer"></i> <strong>Tip:</strong> Haz clic sobre cualquier punto del mapa para trazar tu ruta personalizada.</p>
+                </article>
+
+                <article class="card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-earth-americas"></i> Monitoreo Sísmico en Tiempo Real (USGS)
+                    </div>
+                    <div id="lista-sismos" style="max-height: 220px; overflow-y: auto;">
+                        <p style="color: var(--muted);">🔄 Cargando registros...</p>
                     </div>
                 </article>
 
-                <article class="card panel-doc">
+            </div>
+
+            <!-- Columna Derecha: Video + Alarma + Manual -->
+            <div class="col-side">
+                
+                <article class="card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-circle-play"></i> Video del Procedimiento
+                    </div>
+                    <video controls width="100%" style="border-radius: 12px;">
+                        <source src="{% static 'recursos/videos/clips/Evacuacion.mp4' %}" type="video/mp4">
+                    </video>
+                </article>
+
+                <article class="card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-bell"></i> Alarma Sonora
+                    </div>
+                    <audio controls style="width: 100%;">
+                        <source src="{% static 'recursos/audios/alertas/Alarma de Emergencia.mp3' %}" type="audio/mpeg">
+                    </audio>
+                </article>
+
+                <article class="card">
                     <div class="card-title">
                         <i class="fa-solid fa-file-pdf"></i> Manual del Protocolo
                     </div>
-                    <p class="doc-text">Descarga el plan detallado para el Centro de Comercio y Servicios.</p>
-                    <a href="{% static 'recursos/documentos/pdf/plan_evacuacion.pdf' %}" class="btn-download" download>
-                        <i class="fa-solid fa-cloud-arrow-down"></i> Descargar Documento
+                    <p style="color: var(--muted); font-size: 0.9rem;">Documento oficial en PDF para contingencias.</p>
+                    <a href="{% static 'recursos/documentos/pdf/plan_evacuacion.pdf' %}" class="btn-action" style="display: block; text-align: center; text-decoration: none; padding: 0.7rem; border-radius: 8px; background: var(--primary); color: #000; font-weight: bold;" download>
+                        <i class="fa-solid fa-download"></i> Descargar PDF
                     </a>
                 </article>
 
             </div>
 
-        </section>
+        </div>
     </main>
 
+    <!-- 📜 Scripts y datos locales del proyecto -->
+    <script src="{% static 'recursos/scripts/puntos_encuentro.js' %}"></script>
+    <script src="{% static 'recursos/scripts/tabla_csv.js' %}"></script>
+    <script src="{% static 'recursos/scripts/sismos_api.js' %}"></script>
+    <script src="{% static 'recursos/scripts/mapa.js' %}"></script>
 </body>
 </html>
