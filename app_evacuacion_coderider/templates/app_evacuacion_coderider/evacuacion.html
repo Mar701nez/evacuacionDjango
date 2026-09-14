@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENA - Ruta de Evacuación</title>
+    <link rel="stylesheet" href="{% static 'recursos/estilos/estilo.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="background-overlay"></div>
+
+    <main class="dashboard-container">
+        
+        <header class="header-main">
+            <div class="logo-area">
+                <i class="fa-solid fa-shield-halved"></i>
+                <div>
+                    <h1>Protocolo de <span>Evacuación</span></h1>
+                    <p>Centro de Comercio y Servicios • Piso 1</p>
+                </div>
+            </div>
+            <div class="status-indicator">
+                <span class="pulse"></span> Sistema Activo
+            </div>
+        </header>
+
+        <section class="grid-dashboard">
+            
+            <!-- Tarjeta del Mapa -->
+            <article class="card panel-mapa">
+                <div class="card-title">
+                    <i class="fa-solid fa-map-location-dot"></i> Ruta de Evacuación Principal
+                </div>
+                <div class="content-frame map-frame">
+                    <img src="{% static 'recursos/imagenes/fotos/evacuacion.jpg' %}" alt="Mapa de Evacuación SENA" class="map-image">
+                </div>
+                <p class="instruction-text"><i class="fa-solid fa-circle-info"></i> Sigue las flechas verdes hacia el punto de encuentro exterior.</p>
+            </article>
+
+            <!-- Tarjeta del Video Local Corregida -->
+            <article class="card panel-video">
+                <div class="card-title">
+                    <i class="fa-solid fa-video"></i> Procedimiento Oficial
+                </div>
+                <div class="content-frame video-frame">
+                    <video controls width="100%" height="100%" style="object-fit: cover;">
+                        <source src="{% static 'recursos/videos/clips/Evacuacion.mp4' %}" type="video/mp4">
+                        Tu navegador no soporta el video.
+                    </video>
+                </div>
+                <p class="instruction-text"><i class="fa-solid fa-exclamation-triangle"></i> Revisa las indicaciones para conservar la calma y ubicar las salidas.</p>
+            </article>
+
+            <!-- Tarjeta de Audio y Descargas -->
+            <div class="sidebar-cards">
+                
+                <article class="card panel-audio">
+                    <div class="card-title">
+                        <i class="fa-solid fa-bell"></i> Alarma Sonora
+                    </div>
+                    <div class="audio-player-container">
+                        <div class="audio-icon"><i class="fa-solid fa-volume-high"></i></div>
+                        <audio controls class="custom-audio">
+                            <source src="{% static 'recursos/audios/alertas/Alarma de Emergencia.mp3' %}" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </article>
+
+                <article class="card panel-doc">
+                    <div class="card-title">
+                        <i class="fa-solid fa-file-pdf"></i> Manual del Protocolo
+                    </div>
+                    <p class="doc-text">Descarga el plan detallado para el Centro de Comercio y Servicios.</p>
+                    <a href="{% static 'recursos/documentos/pdf/plan_evacuacion.pdf' %}" class="btn-download" download>
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Descargar Documento
+                    </a>
+                </article>
+
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>
