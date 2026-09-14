@@ -1,6 +1,5 @@
 let map;
-let lineaRuta = null;
-let marcadorOrigen = null;
+let controlRuta = null; // 🚗 Esta variable manejará toda la ruta inteligente por las calles
 
 // Coordenadas SENA Centro de Comercio y Servicios (Popayán) 📍
 const latSENA = 2.4419;
@@ -10,62 +9,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const mapDiv = document.getElementById('mapa-interactivo');
     if (!mapDiv) return;
 
-    // Inicializar Mapa
-    map = L.map('mapa-interactivo').setView([latSENA, lngSENA], 16);
+    // Inicializar Mapa 🗺️
+    map = L.map('mapa-interactivo').setView([latSENA, lngSENA], 15);
 
-    // Servidor seguro de OpenStreetMap (Sin bloqueos) 🌐
+    // Servidor de OpenStreetMap 🌐
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap SENA Evacuación'
     }).addTo(map);
 
-    // Marcador Punto de Encuentro Principal SENA 🟢
-    L.marker([latSENA, lngSENA]).addTo(map)
-        .bindPopup('<b>📍 SENA Centro de Comercio y Servicios</b><br>Punto de Encuentro Evacuación Piso 1')
-        .openPopup();
-
-    // 🎯 Trazar ruta al hacer clic en cualquier lugar del mapa
+    // 🎯 Trazar ruta por las calles al hacer clic en el mapa
     map.on('click', function(e) {
         const userLat = e.latlng.lat;
         const userLng = e.latlng.lng;
         colocarRutaPersonalizada(userLat, userLng, "Ubicación Seleccionada");
     });
 
-    // Forzar redimensionado del mapa para evitar cuadros grises
+    // Forzar redimensionado del mapa para evitar errores gráficos 📐
     setTimeout(() => { map.invalidateSize(); }, 500);
 });
 
-// Función para trazar ruta azul interactiva
+// Función principal para trazar la ruta inteligente 🛣️
 function colocarRutaPersonalizada(lat, lng, nombre) {
-    if (marcadorOrigen) map.removeLayer(marcadorOrigen);
-    if (lineaRuta) map.removeLayer(lineaRuta);
+    // Borramos la ruta anterior si existe para no amontonarlas 🧹
+    if (controlRuta) {
+        map.removeControl(controlRuta);
+    }
 
-    // Marcador de origen
-    marcadorOrigen = L.marker([lat, lng]).addTo(map)
-        .bindPopup(`<b>🚩 Origen: ${nombre}</b>`)
-        .openPopup();
-
-    // Trazado de ruta curvada inteligente
-    const coordsRuta = [
-        [lat, lng],
-        [(lat + latSENA)/2 + 0.0008, (lng + lngSENA)/2],
-        [latSENA, lngSENA]
-    ];
-
-    lineaRuta = L.polyline(coordsRuta, {
-        color: '#2563eb', // Azul Google Maps
-        weight: 6,
-        opacity: 0.9
+    // Creamos la nueva ruta con Leaflet Routing Machine 🚗
+    controlRuta = L.Routing.control({
+        waypoints: [
+            L.latLng(lat, lng), // Punto A: Donde haces clic
+            L.latLng(latSENA, lngSENA) // Punto B: SENA
+        ],
+        routeWhileDragging: true, // 🖱️ Permite mover los pines arrastrándolos
+        language: 'es', // 🇪🇸 Textos en español
+        showAlternatives: true, // 🔀 Muestra varias opciones de ruta
+        fitSelectedRoutes: true, // 📏 Ajusta la cámara para ver toda la ruta
+        lineOptions: {
+            styles: [{color: '#2563eb', weight: 6, opacity: 0.9}] // Tu azul de diseño
+        }
     }).addTo(map);
 
-    map.fitBounds(lineaRuta.getBounds(), { padding: [30, 30] });
-
-    // Actualizar input de la interfaz
+    // Actualizar el texto en tu pantalla 📝
     const input = document.getElementById('origen-input');
     if (input) input.value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
 }
 
-// Búsqueda por palabra clave en Popayán
+// Búsqueda por palabra clave en Popayán 🔍
 function trazarRutaManual() {
     const query = document.getElementById('origen-input').value;
     if (!query) return;
@@ -78,13 +69,13 @@ function trazarRutaManual() {
                 const lon = parseFloat(data[0].lon);
                 colocarRutaPersonalizada(lat, lon, query);
             } else {
-                alert("No se encontró la ubicación en Popayán.");
+                alert("No se encontró la ubicación en Popayán. 😅");
             }
         });
 }
 
+// Conexión con tus botones laterales de "Opciones de Ruta" 🔘
 function seleccionarRuta(index) {
-    // Coordenadas simuladas para rutas alternativas
     const alternativas = [
         { lat: 2.4480, lng: -76.6020, nombre: "Ruta 1 (Por Cra. 9)" },
         { lat: 2.4380, lng: -76.6120, nombre: "Ruta 2 (Por Cra. 6)" },
