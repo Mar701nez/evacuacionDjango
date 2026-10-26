@@ -6,10 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SENA - Protocolo de Evacuación</title>
     
-    <!-- CSS Leaflet & Routing Machine -->
+    <!-- CSS Leaflet, Routing Machine & FontAwesome -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'recursos/estilos/estilo.css' %}">
@@ -138,14 +137,14 @@
         </div>
     </main>
 
+    <!-- 📜 Librerías de Leaflet cargadas PRIMERO -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
     <!-- 📜 Scripts y datos locales del proyecto -->
     <script src="{% static 'recursos/scripts/puntos_encuentro.js' %}"></script>
     <script src="{% static 'recursos/scripts/tabla_csv.js' %}"></script>
     <script src="{% static 'recursos/scripts/sismos_api.js' %}"></script>
     <script src="{% static 'recursos/scripts/mapa.js' %}"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
-    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 </body>
 </html>
