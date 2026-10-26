@@ -1,3 +1,4 @@
+const URL_API_SISMOS = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson';
 // 🌍 Consulta de sismos recientes desde la API del USGS
 document.addEventListener('DOMContentLoaded', () => {
     const contenedorSismos = document.getElementById('lista-sismos');
