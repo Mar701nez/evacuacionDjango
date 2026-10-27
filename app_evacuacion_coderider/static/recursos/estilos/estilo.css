@@ -1,207 +1,189 @@
+/* 🎨 VARIABLES DE COLOR Y DISEÑO */
 :root {
-  color-scheme: dark;
-  --bg: #0a1020;
-  --surface: rgba(255, 255, 255, 0.08);
-  --surface-strong: rgba(255, 255, 255, 0.14);
-  --text: #f8fbff;
-  --muted: #b8c7dd;
-  --primary: #6ee7ff;
-  --secondary: #a78bfa;
-  --accent: #f472b6;
-  --success: #7cf7b4;
-  --warning: #fde68a;
-  --shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
-  --radius: 24px;
-  font-family: 'Montserrat', Inter, system-ui, sans-serif;
+    --primary: #ff6b6b;      /* Rojo/Salmón moderno para resaltos */
+    --success: #00e676;      /* Verde para indicadores activos */
+    --bg-dark: #0f172a;      /* Fondo principal (azul noche) */
+    --card-bg: rgba(30, 41, 59, 0.6); /* Fondo semi-transparente para recuadros */
+    --text-main: #f8fafc;    /* Texto blanco puro */
+    --muted: #94a3b8;        /* Texto gris secundario */
 }
 
-* { box-sizing: border-box; }
+/* 🔄 RESETEO GENERAL */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
-  min-height: 100vh;
-  margin: 0;
-  background:
-    radial-gradient(circle at top left, rgba(110, 231, 255, 0.22), transparent 30rem),
-    radial-gradient(circle at top right, rgba(244, 114, 182, 0.18), transparent 28rem),
-    linear-gradient(135deg, #07111f 0%, #10162f 45%, #1f1237 100%);
-  color: var(--text);
-  overflow-x: hidden;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    position: relative;
 }
 
-/* Rejilla de fondo futurista */
-body::before {
-  position: fixed;
-  inset: 0;
-  z-index: -3;
-  pointer-events: none;
-  content: "";
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: linear-gradient(to bottom, black, transparent 85%);
-}
-
-/* Esferas de luz flotantes */
+/* 🌌 EFECTOS DE FONDO (ORBES LUMINOSOS) */
 .bg-orb {
-  position: fixed;
-  z-index: -2;
-  width: 18rem;
-  height: 18rem;
-  border-radius: 999px;
-  filter: blur(40px);
-  opacity: 0.35;
-  animation: float 8s ease-in-out infinite;
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+    opacity: 0.4;
 }
-.orb-one { top: 8%; left: -4rem; background: #22d3ee; }
-.orb-two { right: -5rem; bottom: 12%; background: #c084fc; animation-delay: -2s; }
+.orb-one {
+    top: -10%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: var(--primary);
+}
+.orb-two {
+    bottom: 10%;
+    right: -5%;
+    width: 400px;
+    height: 400px;
+    background: #38bdf8; /* Azul cyan brillante */
+}
 
-/* Menú de Navegación */
+/* 🧭 BARRA DE NAVEGACIÓN (GLASSMORPHISM) */
 .navbar {
-  width: min(1200px, calc(100% - 2rem));
-  margin: 1.5rem auto 2rem;
-  padding: 0.85rem 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(18px);
-  box-shadow: var(--shadow);
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
-.nav-contenedor { display: flex; justify-content: space-between; align-items: center; }
-.nav-logo { font-size: 1.4rem; font-weight: 900; color: var(--primary); text-decoration: none; }
-.nav-menu { display: flex; gap: 1rem; list-style: none; margin: 0; padding: 0; }
+.nav-contenedor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+.nav-logo {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 800;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.nav-logo i {
+    color: var(--primary);
+}
+.nav-menu {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
 .nav-enlace {
-  color: var(--muted);
-  text-decoration: none;
-  font-weight: 600;
-  padding: 0.6rem 1.2rem;
-  border-radius: 999px;
-  transition: all 0.3s ease;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
 }
 .nav-enlace:hover, .nav-enlace.activo {
-  color: var(--text);
-  background: var(--surface-strong);
-  border: 1px solid rgba(110, 231, 255, 0.3);
+    color: var(--primary);
 }
 
-/* Contenedor Principal */
+/* 📐 CONTENEDOR PRINCIPAL Y HEADER */
 .dashboard-container {
-  width: min(1200px, calc(100% - 2rem));
-  margin: 0 auto 3rem;
+    max-width: 1300px;
+    margin: 2rem auto;
+    padding: 0 20px;
 }
-
 .header-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
 }
-.header-main h1 { font-size: 2.2rem; margin: 0; font-weight: 800; }
-.header-main h1 span { color: var(--primary); }
-.header-main p { color: var(--muted); margin: 0.2rem 0 0; }
+.header-main h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+}
+.header-main h1 span {
+    color: var(--primary);
+}
+.header-main p {
+    color: var(--muted);
+    margin-top: 5px;
+}
 .status-indicator {
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
-  background: rgba(124, 247, 180, 0.15);
-  color: var(--success);
-  border: 1px solid rgba(124, 247, 180, 0.3);
-  font-weight: 700;
-  font-size: 0.9rem;
+    background: rgba(0, 230, 118, 0.15);
+    color: var(--success);
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-weight: 800;
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* Rejilla Principal Organizada */
+/* 🔲 CUADRÍCULA Y RECUADROS (CARDS) */
 .grid-dashboard {
-  display: grid;
-  grid-template-columns: 1.8fr 1.2fr;
-  gap: 1.5rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* El mapa ocupa el doble que el video */
+    gap: 24px;
 }
-.col-main, .col-side { display: flex; flex-direction: column; gap: 1.5rem; }
 
-/* Tarjetas con Efecto Cristal */
 .card {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(18px);
-  padding: 1.4rem;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, border-color 0.3s ease;
 }
-
+.card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 107, 107, 0.4); /* Resalta el borde al pasar el mouse */
+}
 .card-title {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text);
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
-.card-title i { color: var(--primary); }
+.card-title i {
+    color: var(--primary);
+    font-size: 1.3rem;
+}
 
-/* Buscador e Inputs en Mapa */
-.map-search-bar {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.8rem;
-}
-.map-search-bar input {
-  flex: 1;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 12px;
-  padding: 0.6rem 1rem;
-  background: rgba(0, 0, 0, 0.25);
-  color: var(--text);
-}
+/* 🖲️ BOTONES Y ELEMENTOS UI */
 .btn-action {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border: 0;
-  border-radius: 12px;
-  color: #07111f;
-  font-weight: 800;
-  padding: 0.6rem 1rem;
-  cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-action:hover {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+}
+.ruta-option {
+    transition: background 0.3s ease;
+}
+.ruta-option:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Sismos */
-.sismo-item {
-  background: rgba(0, 0, 0, 0.2);
-  border-left: 4px solid var(--primary);
-  border-radius: 12px;
-  padding: 0.8rem 1rem;
-  margin-bottom: 0.6rem;
-}
-.sismo-item span { color: var(--accent); font-weight: bold; }
-
-@keyframes float {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50% { transform: translate3d(0, -1rem, 0); }
-}
-
+/* 📱 RESPONSIVO (MÓVILES) */
 @media (max-width: 900px) {
-  .grid-dashboard { grid-template-columns: 1fr; }
-}
-
-/* Arreglar el cuadro de instrucciones del mapa 🗺️ */
-.leaflet-routing-container {
-    background-color: #1e293b !important; /* Fondo oscuro elegante */
-    color: #bd0f0f !important; /* Texto blanco legible */
-    border-radius: 8px;
-    padding: 10px;
-}
-
-.leaflet-routing-container h2,
-.leaflet-routing-container h3,
-.leaflet-routing-alt,
-.leaflet-routing-alt table {
-    color: #ffffff !important; /* Asegurar que los títulos y pasos se vean */
-}
-
-.leaflet-routing-alt tr:hover {
-    background-color: #334155 !important; /* Efecto al pasar el mouse */
-}
-
-.leaflet-routing-container {
-    display: none !important; /* Oculta el cuadro flotante */
+    .grid-dashboard {
+        grid-template-columns: 1fr; /* Una sola columna en celulares */
+    }
+    .header-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
 }
