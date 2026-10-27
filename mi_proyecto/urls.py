@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from app_evacuacion_coderider.views import bienvenida
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('evacuacion/', include('app_evacuacion_coderider.urls')),
+    path('', bienvenida, name='bienvenida'),
 ]
